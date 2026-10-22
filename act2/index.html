@@ -96,17 +96,54 @@
         .environment-logo {
             width: 42px;
             height: 38px;
-            overflow: hidden;
-            border: 1px solid var(--line);
-            border-radius: 9px;
-            background: #ffffff;
+            overflow: visible;
         }
 
         .environment-logo img {
+            display: block;
             width: 100%;
             height: 100%;
-            padding: 2px;
             object-fit: contain;
+        }
+
+        .environment-navbar .theme-toggle {
+            display: grid;
+            width: 38px;
+            height: 38px;
+            place-items: center;
+            padding: 0;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text);
+            transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+        }
+
+        .environment-navbar .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .environment-navbar .theme-toggle .icon-sun {
+            display: none;
+        }
+
+        html[data-theme="light"] .environment-navbar .theme-toggle .icon-moon {
+            display: none;
+        }
+
+        html[data-theme="light"] .environment-navbar .theme-toggle .icon-sun {
+            display: block;
+        }
+
+        .environment-navbar .theme-toggle:hover {
+            border-color: var(--accent);
+            background: var(--panel-bg);
+        }
+
+        .environment-navbar .theme-toggle:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
         }
 
         .environment-navbar .nav-link {
@@ -346,12 +383,24 @@
 <body>
     <nav class="navbar fixed-top environment-navbar" aria-label="Main navigation">
         <div class="container-fluid px-0">
+            <a class="navbar-brand" href="../index.html">
                 <span class="environment-logo"><img src="../act1/assets/LOGO%20(3)%20(1).svg" alt=""></span>
                 <span>John Paolo Aala</span>
             </a>
-            <a class="nav-link ms-auto" href="https://jpguev.github.io/">
-                Back to Portfolio
-            </a>
+            <div class="d-flex align-items-center gap-2 ms-auto">
+                <a class="nav-link" href="https://jpguev.github.io/">Back to Portfolio</a>
+                <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light mode"
+                    aria-pressed="false">
+                    <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M9.37 5.51A8.003 8.003 0 0 0 18.49 14.63 8.5 8.5 0 1 1 9.37 5.51Z" />
+                    </svg>
+                    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4" />
+                        <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" />
+                    </svg>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -441,12 +490,25 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const themeToggle = document.getElementById("themeToggle");
+
+        function setTheme(theme) {
+            const currentTheme = theme === "light" ? "light" : "dark";
+            document.documentElement.dataset.theme = currentTheme;
+            themeToggle.setAttribute("aria-label", `Switch to ${currentTheme === "light" ? "dark" : "light"} mode`);
+            themeToggle.setAttribute("aria-pressed", String(currentTheme === "light"));
+        }
+
+        themeToggle.addEventListener("click", function () {
+            setTheme(document.documentElement.dataset.theme === "light" ? "dark" : "light");
+        });
+
         window.addEventListener("message", function (event) {
             if (event.source !== window.parent || !event.data || event.data.type !== "gallery-theme") {
                 return;
             }
 
-            document.documentElement.dataset.theme = event.data.theme === "light" ? "light" : "dark";
+            setTheme(event.data.theme);
         });
 
         const environmentalTopics = [
