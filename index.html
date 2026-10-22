@@ -49,11 +49,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="act2.html">Environment Protection</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#gallery">Gallery</a>
+                        <a class="nav-link" href="#activities">Activities</a>
                     </li>
 
                     <li class="nav-item">
@@ -365,18 +361,37 @@
         </div>
     </section>
 
-    <section id="gallery" class="gallery-section">
-        <div class="container-fluid">
-            <div class="gallery-heading">
-                <div>
-                    <p class="gallery-kicker">There was a time...</p>
-                    <h2 class="section-title">Photo Gallery</h2>
+    <section id="activities" class="projects-section">
+        <div class="container">
+            <h2 class="section-title">Activities</h2>
+            <p class="mb-3 text-white-50">Explore both activities from one place.</p>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <a class="activity-link d-block h-100 text-decoration-none text-reset" href="act1/index.html">
+                        <article class="card project-card h-100 shadow-sm border-0">
+                            <img src="act1/assets/img.jpg" class="card-img-top" alt="Photo gallery preview">
+                            <div class="card-body">
+                                <h3 class="card-title">Activity 1: Photo Gallery</h3>
+                                <p class="card-text">Browse personal photos, memories, and project highlights.</p>
+                                <span class="btn btn-custom">Open Gallery</span>
+                            </div>
+                        </article>
+                    </a>
                 </div>
-                <a class="gallery-open-link" href="act1.html" target="_blank" rel="noopener">
-                    Open gallery <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
-                </a>
+                <div class="col-md-6">
+                    <a class="activity-link d-block h-100 text-decoration-none text-reset" href="act2/index.html">
+                        <article class="card project-card h-100 shadow-sm border-0">
+                            <img src="act2/assets/forest.jpg" class="card-img-top" alt="Forest conservation preview">
+                            <div class="card-body">
+                                <h3 class="card-title">Activity 2: Environmental Protection</h3>
+                                <p class="card-text">Learn about protecting nature, reducing pollution, and recycling.
+                                </p>
+                                <span class="btn btn-custom">Open Activity</span>
+                            </div>
+                        </article>
+                    </a>
+                </div>
             </div>
-            <iframe id="galleryFrame" class="gallery-frame" src="act1.html" title="Photo gallery" scrolling="no"></iframe>
         </div>
     </section>
 
@@ -393,14 +408,12 @@
         const savedTheme = localStorage.getItem('theme') || 'dark';
         htmlElement.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);
-
         themeToggle.addEventListener('click', () => {
             const currentTheme = htmlElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             htmlElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
-            syncGalleryTheme();
         });
 
         function updateThemeIcon(theme) {
@@ -413,27 +426,6 @@
                 icon.classList.add('fa-moon');
             }
         }
-
-        const galleryFrame = document.getElementById('galleryFrame');
-        function syncGalleryTheme() {
-            galleryFrame.contentWindow.postMessage({
-                type: 'gallery-theme',
-                theme: htmlElement.getAttribute('data-theme')
-            }, '*');
-        }
-
-        galleryFrame.addEventListener('load', syncGalleryTheme);
-        if (galleryFrame.contentDocument.readyState === 'complete') {
-            syncGalleryTheme();
-        }
-
-        window.addEventListener('message', (event) => {
-            if (event.source !== galleryFrame.contentWindow || !event.data || event.data.type !== 'gallery-height') {
-                return;
-            }
-
-            galleryFrame.style.height = `${event.data.height}px`;
-        });
 
     </script>
 
