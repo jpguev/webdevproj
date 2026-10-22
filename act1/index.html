@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Photo Gallery | John Paolo Aala</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            color-scheme: dark;
+            --gallery-bg: #111213;
+            --gallery-card: rgba(30, 31, 34, 0.94);
+            --gallery-accent: #80eaff;
+            --gallery-text: #f3f4f5;
+            --gallery-muted: #b2b4b8;
+            --gallery-link: #80eaff;
+            --gallery-line: rgba(255, 255, 255, 0.1);
+            --gallery-shadow: rgba(0, 0, 0, 0.32);
+            --gallery-grid: rgba(255, 255, 255, 0.045);
+            --gallery-ambient: rgba(255, 255, 255, 0.035);
+            --gallery-overlay: rgba(0, 0, 0, 0.42);
+            --gallery-image-overlay: rgba(0, 0, 0, 0.78);
+        }
+
+        html[data-theme="light"] {
+            color-scheme: light;
+            --gallery-bg: #f4efe6;
+            --gallery-card: rgba(255, 253, 248, 0.94);
+            --gallery-accent: #a45136;
+            --gallery-text: #292720;
+            --gallery-muted: #514c43;
+            --gallery-link: #a45136;
+            --gallery-line: rgba(65, 54, 40, 0.13);
+            --gallery-shadow: rgba(77, 58, 35, 0.1);
+            --gallery-grid: rgba(91, 72, 48, 0.075);
+            --gallery-ambient: rgba(255, 250, 239, 0.8);
+            --gallery-overlay: rgba(41, 31, 23, 0.34);
+            --gallery-image-overlay: rgba(41, 31, 23, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+            margin: 0;
+            background:
+                radial-gradient(ellipse at 50% 24%, var(--gallery-ambient), transparent 48%),
+                repeating-linear-gradient(0deg, transparent 0 23px, var(--gallery-grid) 23px 24px),
+                repeating-linear-gradient(90deg, transparent 0 23px, var(--gallery-grid) 23px 24px),
+                var(--gallery-bg);
+            color: var(--gallery-text);
+            line-height: 1.7;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .gallery-shell {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 28px clamp(16px, 3vw, 40px) 36px;
+        }
+
+        .gallery-topline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .gallery-back {
+            color: var(--gallery-link);
+            text-decoration: none;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .gallery-back:hover {
+            color: var(--gallery-text);
+        }
+
+        .gallery-title {
+            margin: 0 0 7px;
+            font-size: clamp(1.75rem, 4vw, 2.6rem);
+            font-weight: 700;
+            letter-spacing: -0.055em;
+        }
+
+        .gallery-intro {
+            margin: 0;
+            color: var(--gallery-muted);
+            font-size: 0.9rem;
+        }
+
+        .gallery-rule {
+            width: 58px;
+            height: 1px;
+            margin: 0 0 24px;
+            background: linear-gradient(90deg, var(--gallery-accent), transparent 85%);
+            border-radius: 2px;
+        }
+
+        .card {
+            position: relative;
+            background-color: var(--gallery-card);
+            border: 1px solid var(--gallery-line);
+            border-radius: 14px;
+            box-shadow: 0 12px 30px var(--gallery-shadow);
+            overflow: hidden;
+            transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: color-mix(in srgb, var(--gallery-accent) 48%, transparent);
+            box-shadow: 0 18px 38px var(--gallery-shadow);
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 45% 0 0;
+            background: linear-gradient(transparent, var(--gallery-overlay));
+            pointer-events: none;
+        }
+
+        .bento-xxl {
+            height: 28.5rem;
+        }
+
+        .bento-xl {
+            height: 24rem;
+        }
+
+        .bento-lg {
+            height: 22rem;
+        }
+
+        .bento-md {
+            height: 12rem;
+        }
+
+        .bento-sm {
+            height: 14rem;
+        }
+
+        .project-bento-section {
+            --bento-card: var(--gallery-card);
+            --bento-line: var(--gallery-line);
+            --bento-text: var(--gallery-text);
+            --bento-muted: var(--gallery-muted);
+            --bento-accent: var(--gallery-accent);
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 30px clamp(16px, 3vw, 40px) 48px;
+            color: var(--bento-text);
+        }
+
+        .project-bento-section .gallery-topline {
+            margin-bottom: 18px;
+        }
+
+        .project-bento-section .gallery-title {
+            color: var(--bento-text);
+        }
+
+        .project-bento-section .gallery-intro {
+            color: var(--bento-muted);
+        }
+
+        .project-bento-section .gallery-rule {
+            background: linear-gradient(90deg, var(--bento-accent), transparent 85%);
+        }
+
+        .project-bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            grid-auto-rows: 62px;
+            grid-auto-flow: dense;
+            gap: 12px;
+        }
+
+        .project-bento-card {
+            position: relative;
+            min-width: 0;
+            overflow: hidden;
+            padding: 18px;
+            border: 1px solid var(--bento-line);
+            border-radius: 14px;
+            background: var(--bento-card);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+            transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+        }
+
+        .project-bento-card:hover {
+            transform: translateY(-3px);
+            border-color: color-mix(in srgb, var(--bento-accent) 48%, transparent);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-bento-card h2,
+        .project-bento-card h3,
+        .project-bento-card p {
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-bento-card h2,
+        .project-bento-card h3 {
+            margin: 0;
+            color: var(--bento-text);
+            font-size: clamp(1rem, 1.5vw, 1.35rem);
+            font-weight: 650;
+        }
+
+        .project-bento-card p {
+            margin: 8px 0 0;
+            color: var(--bento-muted);
+            font-size: 0.85rem;
+            line-height: 1.55;
+        }
+
+        .project-bento-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-bento-vehicle {
+            grid-column: span 3;
+            grid-row: span 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .project-bento-vehicle img {
+            width: 100%;
+            height: 72%;
+            object-fit: contain;
+            border-radius: 9px;
+            background: #f5f7f6;
+        }
+
+        .project-bento-farm {
+            grid-column: span 3;
+            grid-row: span 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: var(--bento-card);
+        }
+
+        .project-bento-farm img,
+        .project-bento-pacman img,
+        .project-bento-gallery img {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.72;
+        }
+
+        .project-bento-farm::after,
+        .project-bento-pacman::after,
+        .project-bento-gallery::after {
+            position: absolute;
+            inset: 25% 0 0;
+            z-index: 0;
+            background: linear-gradient(transparent, var(--gallery-image-overlay));
+            content: '';
+            pointer-events: none;
+        }
+
+        .project-bento-memory {
+            grid-column: span 3;
+            grid-row: span 3;
+            padding: 7px;
+        }
+
+        .project-bento-detail {
+            grid-column: span 3;
+            grid-row: span 3;
+            padding: 7px;
+        }
+
+        .project-bento-pacman {
+            grid-column: span 4;
+            grid-row: span 4;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .project-bento-gallery {
+            grid-column: span 5;
+            grid-row: span 4;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .project-bento-photo {
+            grid-column: span 3;
+            grid-row: span 4;
+            padding: 7px;
+            background: var(--bento-card);
+        }
+
+        .project-bento-photo img {
+            border-radius: 8px;
+            filter: grayscale(1);
+        }
+
+        .project-bento-memory img,
+        .project-bento-detail img {
+            border-radius: 9px;
+        }
+
+        @media (max-width: 991.98px) {
+            .bento-xxl {
+                height: 16rem;
+            }
+
+            .bento-xl {
+                height: 14rem;
+            }
+
+            .bento-lg {
+                height: 16rem;
+            }
+
+            .bento-md {
+                height: 14rem;
+            }
+
+            .bento-sm {
+                height: 14rem;
+            }
+
+            .project-bento-grid {
+                grid-auto-rows: 56px;
+                gap: 10px;
+            }
+
+            .project-bento-vehicle,
+            .project-bento-farm,
+            .project-bento-memory,
+            .project-bento-detail {
+                grid-column: span 6;
+                grid-row: span 3;
+            }
+
+            .project-bento-pacman,
+            .project-bento-gallery {
+                grid-column: span 6;
+                grid-row: span 4;
+            }
+
+            .project-bento-photo {
+                grid-column: span 6;
+                grid-row: span 4;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .gallery-topline {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .bento-xxl {
+                height: 15rem;
+            }
+
+            .bento-xl {
+                height: 13rem;
+            }
+
+            .bento-lg {
+                height: 13rem;
+            }
+
+            .bento-md {
+                height: 11rem;
+            }
+
+            .bento-sm {
+                height: 11rem;
+            }
+
+            .project-bento-section {
+                padding-top: 18px;
+                padding-bottom: 30px;
+            }
+
+            .project-bento-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                grid-auto-rows: 58px;
+                gap: 9px;
+            }
+
+            .project-bento-vehicle,
+            .project-bento-farm,
+            .project-bento-memory,
+            .project-bento-detail,
+            .project-bento-pacman,
+            .project-bento-gallery,
+            .project-bento-photo {
+                grid-column: span 1;
+                grid-row: span 3;
+                padding: 12px;
+            }
+
+            .project-bento-pacman,
+            .project-bento-gallery {
+                grid-row: span 4;
+            }
+
+            .project-bento-card h2,
+            .project-bento-card h3 {
+                font-size: 1rem;
+            }
+
+            .project-bento-card p {
+                font-size: 0.72rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="gallery-shell" id="gallery">
+        <header class="gallery-topline">
+            <div>
+                <h1 class="gallery-title">Photo Gallery</h1>
+                <p class="gallery-intro">Snapshots, projects, and moments worth keeping.</p>
+            </div>
+            <a class="gallery-back" href="../index.html#home" target="_top"><i class="fas fa-arrow-left"
+                    aria-hidden="true"></i> Back to portfolio</a>
+        </header>
+        <div class="gallery-rule"></div>
+        <div class="row g-2">
+            <div class="col-12 col-lg-9">
+                <div class="row g-2">
+
+                    <div class="col-12 col-lg-4">
+                        <div class="row g-2">
+                            <div class="col-6 col-lg-12 p-1">
+                                <div class="card p-1 bento-xl">
+                                    <img src="assets/Screenshot%20(26).png" alt="Gallery photo">
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-12 p-1">
+                                <div class="card p-1 bento-md">
+                                    <img src="assets/Screenshot 2026-09-14 133857.png" alt="Gallery photo">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-8">
+                        <div class="row g-2">
+                            <div class="col-12 col-md-6 p-1">
+                                <div class="card p-1 bento-sm">
+                                    <img src="assets/Screenshot 2026-06-16 174248.png" alt="Gallery photo">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 p-1">
+                                <div class="card p-1 bento-sm">
+                                    <img src="../pac.jpg" alt="Pac-Man game">
+                                </div>
+                            </div>
+                            <div class="col-12 p-1">
+                                <div class="card p-1 bento-lg">
+                                    <img src="../farm.jpg" alt="FARM2U project">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-7 col-lg-8 p-1">
+                        <div class="card p-1 bento-sm">
+                            <img src="assets/mask.jpeg" alt="Gallery photo">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5 col-lg-4 p-1">
+                        <div class="card p-1 bento-sm">
+                            <img src="assets/piriswil.jpeg" alt="Gallery photo">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-12 col-lg-3">
+                <div class="row g-2">
+                    <div class="col-12 col-md-6 col-lg-12 p-1">
+                        <div class="card p-1 bento-xxl">
+                            <img src="assets/mua.jpeg" alt="Gallery photo">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-12 p-1">
+                        <div class="card p-1 bento-lg">
+                            <img src="assets/AALA_AFTER.jpg" alt="Gallery photo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <section class="project-bento-section" id="glimpse">
+        <header class="gallery-topline">
+            <div>
+                <h1 class="gallery-title">GLIMPSE</h1>
+                <p class="gallery-intro">A moments.</p>
+            </div>
+        </header>
+        <div class="gallery-rule"></div>
+
+        <div class="project-bento-grid">
+            <div class="project-bento-card project-bento-vehicle">
+                <img src="assets/sb.jpeg" alt="Vehicle Rental Service project">
+            </div>
+
+            <div class="project-bento-card project-bento-farm">
+                <img src="assets/bud.jpeg" alt="FARM2U project">
+            </div>
+
+            <div class="project-bento-card project-bento-memory">
+                <img src="assets/gate.jpeg" alt="A personal moment">
+            </div>
+
+            <div class="project-bento-card project-bento-detail">
+                <img src="assets/sunsit.jpeg" alt="A gallery snapshot">
+            </div>
+
+            <div class="project-bento-card project-bento-pacman">
+                <img src="assets/shoes.jpeg" alt="Pac-Man game project">
+            </div>
+
+            <div class="project-bento-card project-bento-gallery">
+                <img src="assets/valo.jpeg" alt="Digital design project">
+
+            </div>
+
+            <div class="project-bento-card project-bento-photo">
+                <img src="assets/img.jpg" alt="John Paolo Aala">
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const notifyParent = () => {
+            window.parent.postMessage({
+                type: 'gallery-height',
+                height: document.body.scrollHeight
+            }, '*');
+        };
+
+        new ResizeObserver(notifyParent).observe(document.body);
+        window.addEventListener('load', notifyParent);
+        window.addEventListener('resize', notifyParent);
+
+        window.addEventListener('message', (event) => {
+            if (event.source !== window.parent || !event.data || event.data.type !== 'gallery-theme') {
+                return;
+            }
+
+            document.documentElement.dataset.theme = event.data.theme === 'light' ? 'light' : 'dark';
+        });
+    </script>
+
+</body>
+
+</html>
