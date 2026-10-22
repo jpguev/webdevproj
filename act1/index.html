@@ -72,10 +72,67 @@
             font-family: 'Space Grotesk', sans-serif;
         }
 
+        .gallery-navbar {
+            top: 16px;
+            width: min(94%, 1440px);
+            margin-inline: auto;
+            padding: 8px 18px;
+            border: 1px solid var(--gallery-line);
+            border-radius: 14px;
+            background: var(--gallery-card);
+            box-shadow: 0 12px 30px var(--gallery-shadow);
+            backdrop-filter: blur(14px);
+        }
+
+        .gallery-navbar .navbar-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gallery-text);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .gallery-logo {
+            width: 42px;
+            height: 38px;
+            overflow: hidden;
+            border: 1px solid var(--gallery-line);
+            border-radius: 9px;
+            background: #ffffff;
+        }
+
+        .gallery-logo img {
+            width: 100%;
+            height: 100%;
+            padding: 2px;
+            object-fit: contain;
+        }
+
+        .gallery-navbar .nav-link {
+            padding: 8px 14px;
+            border-radius: 8px;
+            color: var(--gallery-link);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.76rem;
+            transition: color 180ms ease, background-color 180ms ease;
+        }
+
+        .gallery-navbar .nav-link:hover,
+        .gallery-navbar .nav-link:focus {
+            background: var(--gallery-grid);
+            color: var(--gallery-text);
+        }
+
+        .gallery-navbar .nav-link:focus-visible {
+            outline: 2px solid var(--gallery-accent);
+            outline-offset: 3px;
+        }
+
         .gallery-shell {
             max-width: 1440px;
             margin: 0 auto;
-            padding: 28px clamp(16px, 3vw, 40px) 36px;
+            padding: 104px clamp(16px, 3vw, 40px) 36px;
         }
 
         .gallery-topline {
@@ -84,17 +141,6 @@
             justify-content: space-between;
             gap: 18px;
             margin-bottom: 22px;
-        }
-
-        .gallery-back {
-            color: var(--gallery-link);
-            text-decoration: none;
-            font-family: 'DM Mono', monospace;
-            font-size: 0.8rem;
-        }
-
-        .gallery-back:hover {
-            color: var(--gallery-text);
         }
 
         .gallery-title {
@@ -387,6 +433,15 @@
         }
 
         @media (max-width: 575.98px) {
+            .gallery-navbar {
+                top: 10px;
+                padding: 7px 12px;
+            }
+
+            .gallery-shell {
+                padding-top: 94px;
+            }
+
             .gallery-topline {
                 align-items: flex-start;
                 flex-direction: column;
@@ -453,14 +508,24 @@
 </head>
 
 <body>
+    <nav class="navbar fixed-top gallery-navbar" aria-label="Main navigation">
+        <div class="container-fluid px-0">
+            <a class="navbar-brand" href="../index.html">
+                <span class="gallery-logo"><img src="assets/LOGO%20(3)%20(1).svg" alt=""></span>
+                <span>John Paolo Aala</span>
+            </a>
+            <a class="nav-link ms-auto" href="https://jpguev.github.io/" target="_top">
+                Back to Portfolio
+            </a>
+        </div>
+    </nav>
+
     <main class="gallery-shell" id="gallery">
         <header class="gallery-topline">
             <div>
                 <h1 class="gallery-title">Photo Gallery</h1>
                 <p class="gallery-intro">Snapshots, projects, and moments worth keeping.</p>
             </div>
-            <a class="gallery-back" href="../index.html#home" target="_top"><i class="fas fa-arrow-left"
-                    aria-hidden="true"></i> Back to portfolio</a>
         </header>
         <div class="gallery-rule"></div>
         <div class="row g-2">
@@ -490,12 +555,12 @@
                             </div>
                             <div class="col-12 col-md-6 p-1">
                                 <div class="card p-1 bento-sm">
-                                    <img src="../pac.jpg" alt="Pac-Man game">
+                                    <img src="assets/pac.jpg" alt="Pac-Man game">
                                 </div>
                             </div>
                             <div class="col-12 p-1">
                                 <div class="card p-1 bento-lg">
-                                    <img src="../farm.jpg" alt="FARM2U project">
+                                    <img src="assets/farm.jpg" alt="FARM2U project">
                                 </div>
                             </div>
                         </div>
